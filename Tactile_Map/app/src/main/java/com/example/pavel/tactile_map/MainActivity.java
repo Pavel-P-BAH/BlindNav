@@ -1,33 +1,50 @@
 package com.example.pavel.tactile_map;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Rect;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ImageView mapView = (ImageView)findViewById(R.id.map_image);
+        mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public boolean onTouch(View v, MotionEvent event) {
+                Bitmap bmp = ((BitmapDrawable) ((ImageView) v).getDrawable()).getBitmap();
+                Vibrator mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                int x = (int) (event.getX() / v.getWidth() * bmp.getWidth());
+                int y = (int) (event.getY() / v.getHeight() * bmp.getHeight());
+
+                int pixel = bmp.getPixel(x, y);
+                if (Color.red(pixel) == 0) {
+                    mVibrator.vibrate(1); //TODO: Find best value
+                }
+                return true;
             }
         });
-    }
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -49,4 +66,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
