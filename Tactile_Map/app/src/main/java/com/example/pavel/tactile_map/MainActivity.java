@@ -19,6 +19,7 @@ import android.graphics.Color;
 
 
 public class MainActivity extends AppCompatActivity {
+    ImageView mapView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ImageView mapView = (ImageView)findViewById(R.id.map_image);
+        mapView = (ImageView)findViewById(R.id.map_image);
         mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -36,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
                 int x = (int) (event.getX() / v.getWidth() * bmp.getWidth());
                 int y = (int) (event.getY() / v.getHeight() * bmp.getHeight());
 
-                int pixel = bmp.getPixel(x, y);
-                if (Color.red(pixel) == 0) {
-                    mVibrator.vibrate(1); //TODO: Find best value
+                if (x < bmp.getWidth() && y < bmp.getHeight()
+                        && x > 0 && y > 0) {
+                    int pixel = bmp.getPixel(x, y);
+                    if (Color.red(pixel) == 0) {
+                        mVibrator.vibrate(10); //TODO: Find best value
+                    }
                 }
                 return true;
             }
@@ -61,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            System.out.println("No settings yet");
+            return true;
+        }
+        if (id == R.id.image_select) {
             return true;
         }
 
